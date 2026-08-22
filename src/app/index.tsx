@@ -1,0 +1,196 @@
+import CardNotes from "@/components/CardNotes";
+import CardTasks from "@/components/CardTasks";
+import { WatodoIcon } from "@/components/WatodoIcon";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaFrameContext } from "react-native-safe-area-context";
+import { useTasks, useTasksStore } from "../../store/tasksStore";
+import { Task } from "../../types/taskTypes";
+import ModalTasks from "../components/ModalTasks";
+
+
+export default function Index() {
+  const day: Date = new Date();
+  const tasks = useTasks();
+  const getTasks = useTasksStore((state) => state.getTasks);
+
+  useEffect(() => {
+    getTasks(day);
+  }, []);
+
+  const [selectedTasks, setSelectedTasks] = useState<Task[] | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOpenTasks = (tasks: Task[]) => {
+    setSelectedTasks(tasks);
+    setModalVisible(true);
+  }
+
+  const handleCreateTask = () => {
+    setSelectedTasks(null);
+    setModalVisible(true);
+  }
+
+  const handleEditTask = (task: Task) => {
+    setSelectedTasks([task]);
+    setModalVisible(true);
+  }
+
+  const handleCloseModal = () => {
+    setSelectedTasks(null);
+    setModalVisible(false);
+  }
+
+  const handleOpenSettings = () => { }
+
+  const handleOpenNotes = () => { }
+
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'short' };
+    return date.toLocaleDateString('fr-FR', options);
+  }
+
+  return (
+    <SafeAreaFrameContext value={{ x: 0, y: 0, width: 0, height: 0 }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Salut, Constance 👋</Text>
+            <Text style={styles.subtitle}>Ven. 21 août</Text>
+          </View>
+          <TouchableOpacity onPress={handleOpenSettings}>
+            <WatodoIcon name="gear" size={35}/>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.body}>
+          <View style={styles.content}>
+            <View style={styles.contentHeader}>
+              <View style={styles.dualSectionContainer}>
+                <Text style={styles.sectionTitle}>Tâches</Text>
+                <CardTasks date={day} onPressed={() => handleOpenTasks(tasks)}/>
+              </View>
+              <View style={styles.dualSectionContainer}>
+                <Text style={styles.sectionTitle}>Notes</Text>
+                <CardNotes/>
+              </View>
+            </View>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Habitudes</Text>
+
+            </View>
+        
+            <ModalTasks
+              visible={modalVisible}
+              tasks={selectedTasks || undefined}
+              onClose={handleCloseModal}
+              onSuccess={() => {}}
+              onCreate={handleCreateTask}
+              onEdit={handleEditTask}
+            />
+          </View>
+
+        </View>
+
+        <View style={styles.navigation}>
+        </View>
+      </View>
+    </SafeAreaFrameContext>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    backgroundColor: "#DC6E8E",
+    gap: 10,
+    height: "100%",
+  },
+
+  header: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    alignContent: "space-between",
+    flexDirection: "row",
+    padding: 25,
+    gap: 10,
+  },
+  titleContainer: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    flexDirection: "column",
+    width: "100%",
+    gap: 5,
+  },
+  title: {
+    fontSize: 20,
+    fontFamily: "Fredoka-Bold",
+    color: "#FAF8FC",
+  },
+  subtitle: {
+    fontSize: 14,
+    opacity: 0.75,
+    fontFamily: "Fredoka-SemiBold",
+    color: "#FAF8FC",
+  },
+
+  body: {
+    width: "100%",
+    height: "100%",
+  },
+
+  content: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    gap: 10,
+    padding: 25,
+    backgroundColor: "#FAF8FC",
+    borderRadius: "50px",
+    color: "#3A0203",
+  },
+
+  navigation: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+  },
+  contentHeader: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    gap: 20,
+  },
+  dualSectionContainer: {
+    flexGrow: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    gap: 10,
+  },
+  sectionContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    gap: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontFamily: "Fredoka-Bold",
+    width: "100%",
+  },
+});
