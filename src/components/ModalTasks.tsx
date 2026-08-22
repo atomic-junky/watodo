@@ -4,7 +4,6 @@ import { Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { useTasksStore } from '../../store/tasksStore';
 import { EditTasks, ModalTasksProps, Task } from '../../types/taskTypes';
 import { Checkbox } from './Checkbox';
-import Dimmer from './Dimmer';
 
 const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : ModalTasksProps) => {
 
@@ -14,10 +13,6 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
     const [pendingFocusId, setPendingFocusId] = useState<string | null>(null);
     const [focusedTaskId, setFocusedTaskId] = useState<string | null>(null);
     const inputRefs = useRef<Record<string, TextInput | null>>({});
-    // Associe l'id local temporaire (avant réponse du serveur) au vrai id Firestore.
-    // On ne remplace jamais task.id dans data.tasks : ça changerait la key React
-    // et ferait perdre le focus en pleine saisie. On résout l'id réel uniquement
-    // au moment d'appeler le serveur.
     const remoteIdMap = useRef<Record<string, string>>({});
     const dataRef = useRef(data);
 
@@ -60,7 +55,6 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
             if (!created) return;
             remoteIdMap.current[localId] = created.id;
 
-            // Rattrape le texte/l'état tapés pendant que la création était en vol.
             const current = dataRef.current.tasks.find((t) => t.id === localId);
             if (current && (current.title.trim() !== '' || current.status !== 'todo')) {
                 updateTask(created.id, { title: current.title.trim(), status: current.status });
@@ -86,8 +80,6 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
 
     const handleUpdate = async (task: Task) => {
         const realId = resolveId(task.id);
-        // Encore en cours de création côté serveur : la reconciliation dans
-        // handleInsertAfter renverra ce texte une fois le vrai id connu.
         if (realId.startsWith('local-')) return;
 
         setLoading(true);
@@ -149,7 +141,6 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
     const getRowStyle = (task: Task, index: number) => [
         styles.row,
         index % 2 === 1 && styles.rowOdd,
-        task.status === "done" && styles.rowDone,
     ];
 
     const getTextInputStyle = (task: Task) => [
@@ -160,7 +151,7 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
-            <Dimmer onPress={handleClose} />
+            {/* <Dimmer onPress={handleClose} /> */}
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                     {[...data.tasks]
@@ -191,7 +182,7 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
                     ))}
                     <TouchableOpacity style={styles.addRowButton} onPress={() => handleInsertAfter()}>
                         <MaterialIcons name="add" size={20} color="#3A020399" />
-                        <Text style={styles.addRowText}>Élément de liste</Text>
+                        <Text style={styles.addRowText}>Ajouter une tâche</Text>
                     </TouchableOpacity>
                 </ScrollView>
 
@@ -205,7 +196,7 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
 
 const styles = StyleSheet.create({
     container: {
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
@@ -228,12 +219,10 @@ const styles = StyleSheet.create({
         gap: 10,
         paddingHorizontal: 35,
         paddingVertical: 5,
+        height: 50,
     },
     rowOdd: {
         backgroundColor: 'rgba(58, 2, 3, 0.12)',
-    },
-    rowDone: {
-        opacity: 0.5,
     },
     addRowButton: {
         flexDirection: 'row',
@@ -250,10 +239,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         flex: 1,
         fontFamily: "Fredoka-Medium",
-        fontSize: 16,
+        fontSize: 18,
+        color: '#3A0203',
     },
     textInputDone: {
         textDecorationLine: 'line-through',
+        opacity: 0.5,
     },
     textInputFocused: {
         borderRadius: 8,

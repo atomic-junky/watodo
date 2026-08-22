@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
         padding: 2,
     },
     box: {
-        width: 14,
-        height: 14,
+        width: 18,
+        height: 18,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#FAF8FC',
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     },
     check: {
         position: 'absolute',
-        transform: [{ translateX: 2 }, { translateY: -4 }],
+        transform: [{ translateX: 3 }, { translateY: -4 }, { scale: 1.2 }],
     },
 });
 

@@ -1,5 +1,8 @@
+import { createAsyncStorage } from '@react-native-async-storage/async-storage';
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { initializeAuth, onAuthStateChanged } from 'firebase/auth';
+//@ts-ignore
+import { getReactNativePersistence } from '@firebase/auth/dist/rn/index.js';
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -13,7 +16,13 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-const auth = getAuth(app);
+
+const appStorage = createAsyncStorage('app');
+const persistence = getReactNativePersistence(appStorage);
+export const auth = initializeAuth(app, {
+  persistence
+});
+
 onAuthStateChanged (auth, (user) => {
   if (user) {
     // User is signed in, you can access user information here.

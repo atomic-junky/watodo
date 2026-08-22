@@ -1,15 +1,15 @@
 import { BlurView } from 'expo-blur';
-import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 const Dimmer = ({onPress} : DimmerProps) => {
 
     return (
-        <TouchableWithoutFeedback
+        <Pressable
             style={styles.dimmer}
             onPress={onPress}
         >
             <BlurView intensity={25} style={styles.blurview} />
-        </TouchableWithoutFeedback>
+        </Pressable>
     );
 }
 

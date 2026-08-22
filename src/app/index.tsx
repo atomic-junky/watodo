@@ -3,7 +3,7 @@ import CardTasks from "@/components/CardTasks";
 import { WatodoIcon } from "@/components/WatodoIcon";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaFrameContext } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useTasks, useTasksStore } from "../../store/tasksStore";
 import { Task } from "../../types/taskTypes";
 import ModalTasks from "../components/ModalTasks";
@@ -51,15 +51,15 @@ export default function Index() {
   }
 
   return (
-    <SafeAreaFrameContext value={{ x: 0, y: 0, width: 0, height: 0 }}>
-      <View style={styles.container}>
+    <View style={styles.app}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Salut, Constance 👋</Text>
             <Text style={styles.subtitle}>Ven. 21 août</Text>
           </View>
           <TouchableOpacity onPress={handleOpenSettings}>
-            <WatodoIcon name="gear" size={35}/>
+            <WatodoIcon name="settings" size={35} color={"#FAF8FC"}/>
           </TouchableOpacity>
         </View>
 
@@ -94,18 +94,22 @@ export default function Index() {
 
         <View style={styles.navigation}>
         </View>
-      </View>
-    </SafeAreaFrameContext>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  app: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#DC6E8E",
+  },
   container: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
     flexDirection: "column",
-    backgroundColor: "#DC6E8E",
     gap: 10,
     height: "100%",
   },
@@ -114,8 +118,7 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-start",
-    alignContent: "space-between",
+    justifyContent: "space-between",
     flexDirection: "row",
     padding: 25,
     gap: 10,
@@ -125,7 +128,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     flexDirection: "column",
-    width: "100%",
     gap: 5,
   },
   title: {
@@ -192,5 +194,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Fredoka-Bold",
     width: "100%",
+    color: "#3A0203",
   },
 });

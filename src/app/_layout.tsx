@@ -20,5 +20,10 @@ export default function RootLayout() {
 
   if (!fontsLoaded) return null;
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" options={{ title: 'Tasks' }} />
+        <Stack.Screen name="login" options={{ title: 'Login' }} />
+    </Stack>
+  );
 }

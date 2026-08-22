@@ -8,13 +8,12 @@ const CardTasks = ({ date, onPressed } : TickCardProps) => {
 
     const getRowStyle = (task: any, index: number) => [
         styles.taskRow,
-        task.checked && styles.rowDone,
         index % 2 === 1 && styles.taskRowOdd,
     ];
 
     const getRowTextStyle = (task: any) => [
         styles.taskText,
-        task.checked && styles.taskTextDone,
+        task.status === "done" && styles.taskTextDone,
     ];
 
     return (
@@ -25,7 +24,7 @@ const CardTasks = ({ date, onPressed } : TickCardProps) => {
                     <View key={index} style={getRowStyle(task, index)}>
                         <View style={styles.checkContainer} >
                         {(task.status === "done") && (
-                            <CheckIcon strokeColor="#fff" />
+                            <CheckIcon strokeColor="#3A0203" />
                         )}
                         </View>
                         <Text style={getRowTextStyle(task)} numberOfLines={1} ellipsizeMode="tail">{task.title}</Text>
@@ -60,23 +59,21 @@ const styles = StyleSheet.create({
     taskRowOdd: {
         backgroundColor: 'rgba(58, 2, 3, 0.12)',
     },
-    rowDone: {
-        opacity: 0.5,
-    },
     checkContainer: {
-        width: 10,
-        height: 10,
+        transform: [{ scale: 0.8 }],
+        width: 13,
     },
     taskText: {
         fontFamily: 'Fredoka-Medium',
         width: '100%',
         minWidth: 0,
         flexShrink: 1,
-        color: '#FAF8FC',
-        fontSize: 12,
+        color: '#3A0203',
+        fontSize: 14,
     },
     taskTextDone: {
         textDecorationLine: 'line-through',
+        opacity: 0.5,
     },
 });
 

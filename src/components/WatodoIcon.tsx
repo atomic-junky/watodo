@@ -1,4 +1,4 @@
-import createIconSet from '@expo/vector-icons/createIconSet';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const glyphMap = { 'gear': 1};
-export const WatodoIcon = createIconSet(glyphMap, 'fontFamily', 'custom-icon-font.ttf');
+export const WatodoIcon = MaterialIcons;
