@@ -20,6 +20,15 @@ export const useTasksStore = create<TaskAction & TasksState>((set, get) => ({
             set({ loading: false, error: (error as Error).message });
         }
     },
+    hasTasks: async (date: Date) => {
+        try {
+            const response = await getTasksForDay(date);
+            return !!response.success && !!response.data && response.data.length > 0;
+        } catch (error) {
+            set({ error: (error as Error).message });
+            return false;
+        }
+    },
     addTask: async (task: CreateTask) => {
         set({ loading: true, error: null });
         try {

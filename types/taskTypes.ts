@@ -18,6 +18,7 @@ export type TaskStatus = typeof TASK_STATUS[number];
 
 export interface TaskAction {
     getTasks: (day: Date) => Promise<void>;
+    hasTasks: (date: Date) => Promise<boolean>;
     addTask: (task: CreateTask) => Promise<Task | null>;
     updateTask: (taskId: string, task: Partial<UpdateTask>) => Promise<void>;
     deleteTask: (taskId: string) => Promise<void>;

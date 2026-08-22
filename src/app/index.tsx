@@ -1,5 +1,7 @@
 import CardNotes from "@/components/CardNotes";
 import CardTasks from "@/components/CardTasks";
+import { DayScroller } from "@/components/DayScroller";
+import { NavBar } from "@/components/NavBar";
 import { WatodoIcon } from "@/components/WatodoIcon";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -10,13 +12,14 @@ import ModalTasks from "../components/ModalTasks";
 
 
 export default function Index() {
-  const day: Date = new Date();
+  const today = new Date();
+  const [day, setDay] = useState<Date>(new Date());
   const tasks = useTasks();
   const getTasks = useTasksStore((state) => state.getTasks);
 
   useEffect(() => {
     getTasks(day);
-  }, []);
+  }, [day]);
 
   const [selectedTasks, setSelectedTasks] = useState<Task[] | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -56,12 +59,14 @@ export default function Index() {
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Salut, Constance 👋</Text>
-            <Text style={styles.subtitle}>Ven. 21 août</Text>
+            <Text style={styles.subtitle}>{formatDate(today)}</Text>
           </View>
           <TouchableOpacity onPress={handleOpenSettings}>
             <WatodoIcon name="settings" size={35} color={"#FAF8FC"}/>
           </TouchableOpacity>
         </View>
+
+        <DayScroller day={day} onDayChanged={setDay} />
 
         <View style={styles.body}>
           <View style={styles.content}>
@@ -93,6 +98,7 @@ export default function Index() {
         </View>
 
         <View style={styles.navigation}>
+          <NavBar onPressAdd={handleCreateTask} />
         </View>
       </SafeAreaView>
     </View>
@@ -165,6 +171,8 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     alignItems: "center",
+    position: "absolute",
+    bottom: 0,
   },
   contentHeader: {
     width: "100%",
@@ -176,6 +184,8 @@ const styles = StyleSheet.create({
   },
   dualSectionContainer: {
     flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: "auto",
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",

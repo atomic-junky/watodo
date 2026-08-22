@@ -6,11 +6,6 @@ import { TickCard, TickCardProps } from './TickCard';
 const CardTasks = ({ date, onPressed } : TickCardProps) => {
     const tasks = useTasks();
 
-    const getRowStyle = (task: any, index: number) => [
-        styles.taskRow,
-        index % 2 === 1 && styles.taskRowOdd,
-    ];
-
     const getRowTextStyle = (task: any) => [
         styles.taskText,
         task.status === "done" && styles.taskTextDone,
@@ -21,7 +16,7 @@ const CardTasks = ({ date, onPressed } : TickCardProps) => {
             <View style={styles.cardContent}>
                 {tasks.sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
                     .map((task, index) => (
-                    <View key={index} style={getRowStyle(task, index)}>
+                    <View key={index} style={styles.taskRow}>
                         <View style={styles.checkContainer} >
                         {(task.status === "done") && (
                             <CheckIcon strokeColor="#3A0203" />
@@ -37,7 +32,6 @@ const CardTasks = ({ date, onPressed } : TickCardProps) => {
 
 const styles = StyleSheet.create({
     cardContent: {
-        flex: 1,
         width: '100%',
         minWidth: 0,
         height: '100%',
@@ -55,9 +49,6 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         paddingHorizontal: 10,
         overflow: 'hidden',
-    },
-    taskRowOdd: {
-        backgroundColor: 'rgba(58, 2, 3, 0.12)',
     },
     checkContainer: {
         transform: [{ scale: 0.8 }],

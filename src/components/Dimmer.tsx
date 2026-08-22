@@ -2,7 +2,6 @@ import { BlurView } from 'expo-blur';
 import { Pressable, StyleSheet } from 'react-native';
 
 const Dimmer = ({onPress} : DimmerProps) => {
-
     return (
         <Pressable
             style={styles.dimmer}

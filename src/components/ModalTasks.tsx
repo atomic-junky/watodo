@@ -6,7 +6,6 @@ import { EditTasks, ModalTasksProps, Task } from '../../types/taskTypes';
 import { Checkbox } from './Checkbox';
 
 const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : ModalTasksProps) => {
-
     const {addTask, updateTask, deleteTask} = useTasksStore();
     const [data, setData] = useState<EditTasks>({tasks: []});
     const [loading, setLoading] = useState(false);
@@ -89,7 +88,6 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
                 status: task.status
             };
             await updateTask(realId, updatedData);
-            console.log(`Task with ID ${realId} updated successfully.`);
             onSuccess?.();
 
         } catch (error) {
@@ -109,7 +107,6 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
                 index: task.index,
             };
             await addTask(newTask);
-            console.log(`Task with title ${task.title} added successfully.`);
 
             onSuccess?.();
         } catch (error) {
@@ -124,7 +121,6 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
         setLoading(true);
         try {
             await deleteTask(taskId);
-            console.log(`Task with ID ${taskId} deleted successfully.`);
             onSuccess?.();
         } catch (error) {
             console.error("Error deleting task: ", error);
