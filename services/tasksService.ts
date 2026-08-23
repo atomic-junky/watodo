@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, Timestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { ServiceResponse } from "../types/commonTypes";
 import { CreateTask, Task, UpdateTask } from "../types/taskTypes";
@@ -48,19 +48,12 @@ export async function getTasksForDay(day: Date): Promise<ServiceResponse<Task[]>
 
 export async function addTask(taskData: CreateTask): Promise<ServiceResponse<Task>> {
     try {
-        const taskToCreate = {
-            ...taskData,
-            day: serverTimestamp(),
-        }
-
-        const docRef = await addDoc(collection(db, TASKS_COLLECTION), taskToCreate);
-        const date: Date = new Date();
-        date.setHours(0, 0, 0, 0); // Normalize the day to midnight for comparison
+        taskData.day.setHours(0, 0, 0, 0);
+        const docRef = await addDoc(collection(db, TASKS_COLLECTION), taskData);
 
         const task: Task = {
             id: docRef.id,
             ...taskData,
-            day: date,
             status: "todo"
         }
 

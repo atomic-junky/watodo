@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useTasks } from '../../store/tasksStore';
 import { CheckIcon } from './CheckIcon';
-import { TickCard, TickCardProps } from './TickCard';
+import { TicketCard, TicketCardProps } from './TicketCard';
 
-const CardTasks = ({ date, onPressed } : TickCardProps) => {
+const CardTasks = ({ date, onPressed } : TicketCardProps) => {
     const tasks = useTasks();
 
     const getRowTextStyle = (task: any) => [
@@ -12,7 +12,7 @@ const CardTasks = ({ date, onPressed } : TickCardProps) => {
     ];
 
     return (
-        <TickCard cardColor='#b36a94' onPressed={onPressed}>
+        <TicketCard cardColor='#b36a94' onPressed={onPressed}>
             <View style={styles.cardContent}>
                 {tasks.sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
                     .map((task, index) => (
@@ -26,7 +26,7 @@ const CardTasks = ({ date, onPressed } : TickCardProps) => {
                     </View>
                 )) }
             </View>
-        </TickCard>
+        </TicketCard>
     );
 }
 
@@ -37,16 +37,14 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        paddingVertical: 5,
     },
     taskRow: {
         width: '100%',
-        height: 24,
+        height: 20,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
-        paddingVertical: 5,
         paddingHorizontal: 10,
         overflow: 'hidden',
     },
@@ -60,7 +58,7 @@ const styles = StyleSheet.create({
         minWidth: 0,
         flexShrink: 1,
         color: '#3A0203',
-        fontSize: 14,
+        fontSize: 16,
     },
     taskTextDone: {
         textDecorationLine: 'line-through',

@@ -6,8 +6,10 @@ import { WatodoIcon } from "@/components/WatodoIcon";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNotes, useNotesStore } from "../../store/notesStore";
 import { useTasks, useTasksStore } from "../../store/tasksStore";
 import { Task } from "../../types/taskTypes";
+import ModalNotes from "../components/ModalNotes";
 import ModalTasks from "../components/ModalTasks";
 
 
@@ -16,13 +18,17 @@ export default function Index() {
   const [day, setDay] = useState<Date>(new Date());
   const tasks = useTasks();
   const getTasks = useTasksStore((state) => state.getTasks);
+  const notes = useNotes();
+  const getNotes = useNotesStore((state) => state.getNotes);
 
   useEffect(() => {
     getTasks(day);
+    getNotes(day);
   }, [day]);
 
   const [selectedTasks, setSelectedTasks] = useState<Task[] | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [notesModalVisible, setNotesModalVisible] = useState(false);
 
   const handleOpenTasks = (tasks: Task[]) => {
     setSelectedTasks(tasks);
@@ -46,7 +52,13 @@ export default function Index() {
 
   const handleOpenSettings = () => { }
 
-  const handleOpenNotes = () => { }
+  const handleOpenNotes = () => {
+    setNotesModalVisible(true);
+  }
+
+  const handleCloseNotesModal = () => {
+    setNotesModalVisible(false);
+  }
 
   const formatDate = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'short' };
@@ -77,21 +89,30 @@ export default function Index() {
               </View>
               <View style={styles.dualSectionContainer}>
                 <Text style={styles.sectionTitle}>Notes</Text>
-                <CardNotes/>
+                <CardNotes date={day} onPressed={handleOpenNotes}/>
               </View>
             </View>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Habitudes</Text>
 
             </View>
-        
+
             <ModalTasks
               visible={modalVisible}
               tasks={selectedTasks || undefined}
+              day={day}
               onClose={handleCloseModal}
               onSuccess={() => {}}
               onCreate={handleCreateTask}
               onEdit={handleEditTask}
+            />
+
+            <ModalNotes
+              visible={notesModalVisible}
+              notes={notes || undefined}
+              day={day}
+              onClose={handleCloseNotesModal}
+              onSuccess={() => getNotes(day)}
             />
           </View>
 

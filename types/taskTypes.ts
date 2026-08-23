@@ -27,6 +27,7 @@ export interface TaskAction {
 export interface ModalTasksProps {
     visible: boolean;
     tasks?: Task[];
+    day: Date;
     onClose: () => void;
     onSuccess?: () => void;
     onCreate?: () => void;
@@ -36,6 +37,7 @@ export interface ModalTasksProps {
 export interface CreateTask {
     title: string;
     index: number;
+    day: Date;
 }
 
 export interface UpdateTask {

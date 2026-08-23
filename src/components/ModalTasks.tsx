@@ -5,7 +5,7 @@ import { useTasksStore } from '../../store/tasksStore';
 import { EditTasks, ModalTasksProps, Task } from '../../types/taskTypes';
 import { Checkbox } from './Checkbox';
 
-const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : ModalTasksProps) => {
+const ModalTasks = ({visible, tasks, day, onClose, onSuccess, onCreate, onEdit} : ModalTasksProps) => {
     const {addTask, updateTask, deleteTask} = useTasksStore();
     const [data, setData] = useState<EditTasks>({tasks: []});
     const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
         });
         setPendingFocusId(localId);
 
-        addTask({ title: newTask.title, index: newTask.index }).then((created) => {
+        addTask({ title: newTask.title, day: day, index: newTask.index }).then((created) => {
             if (!created) return;
             remoteIdMap.current[localId] = created.id;
 
@@ -104,6 +104,7 @@ const ModalTasks = ({visible, tasks, onClose, onSuccess, onCreate, onEdit} : Mod
 
             const newTask = {
                 title: task.title.trim(),
+                day: task.day,
                 index: task.index,
             };
             await addTask(newTask);

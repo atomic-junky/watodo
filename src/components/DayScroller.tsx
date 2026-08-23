@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef, useState } from 'react';
 import { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useNotes, useNotesStore } from '../../store/notesStore';
 import { useTasks, useTasksStore } from '../../store/tasksStore';
 
 const RANGE = 7;
@@ -19,7 +20,9 @@ export function DayScroller({
     day, onDayChanged,
 }: DayScrollerProps) {
     const tasks = useTasks();
+    const notes = useNotes();
     const {hasTasks} = useTasksStore();
+    const {hasNotes} = useNotesStore();
     const scrollRef = useRef<ScrollView>(null);
     const [viewportWidth, setViewportWidth] = useState(0);
 
@@ -35,13 +38,16 @@ export function DayScroller({
     const [showDot, setShowDot] = useState<boolean[]>(() => Array(days.length).fill(false));
 
     const reloadDots = async () => {
-        const results = await Promise.all(days.map((date) => hasTasks(date)));
+        const tasksResults = await Promise.all(days.map((date) => hasTasks(date)));
+        const notesResults = await Promise.all(days.map((date) => hasNotes(date)));
+        
+        const results = days.map((_, index) => tasksResults[index] || notesResults[index]);
         setShowDot(results);
     }
 
     useEffect(() => {
         reloadDots();
-    }, [day, tasks]);
+    }, [day, tasks, notes]);
 
     const itemCenters = useRef<number[]>([]);
     const [measuredCount, setMeasuredCount] = useState(0);
