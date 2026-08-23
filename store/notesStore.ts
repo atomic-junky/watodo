@@ -40,7 +40,7 @@ export const useNotesStore = create<NotesAction & NotesState>((set, get) => ({
                 });
                 return response.data;
             } else {
-                set({ loading: false, error: response.error || "Failed to add a newnotes" });
+                set({ loading: false, error: response.error || "Failed to add a notes" });
                 return null;
             }
         } catch (error) {

@@ -1,9 +1,10 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useRef, useState } from 'react';
-import { Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTasksStore } from '../../store/tasksStore';
 import { EditTasks, ModalTasksProps, Task } from '../../types/taskTypes';
 import { Checkbox } from './Checkbox';
+import ModalDimmer from './ModalDimmer';
 
 const ModalTasks = ({visible, tasks, day, onClose, onSuccess, onCreate, onEdit} : ModalTasksProps) => {
     const {addTask, updateTask, deleteTask} = useTasksStore();
@@ -147,67 +148,54 @@ const ModalTasks = ({visible, tasks, day, onClose, onSuccess, onCreate, onEdit} 
     ];
 
     return (
-        <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
-            {/* <Dimmer onPress={handleClose} /> */}
-            <View style={styles.container}>
-                <ScrollView style={styles.scrollView}>
-                    {[...data.tasks]
-                        .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
-                        .map((task, index) => (
-                        <View key={task.id} style={getRowStyle(task, index)}>
-                            <Checkbox
-                                checked={task.status === "done"}
-                                onChange={() => onCheckboxChange(task)}
-                            />
-                            <TextInput
-                                ref={(input) => {
-                                    inputRefs.current[task.id] = input;
-                                }}
-                                style={getTextInputStyle(task)}
-                                value={task.title}
-                                onChangeText={(text) => onTextInputChange(task, text)}
-                                onSubmitEditing={() => handleInsertAfter(task)}
-                                onFocus={() => setFocusedTaskId(task.id)}
-                                onBlur={() => setFocusedTaskId((id) => (id === task.id ? null : id))}
-                                returnKeyType="next"
-                                submitBehavior="submit"
-                            />
-                            <TouchableOpacity onPress={() => handleRemove(task)} hitSlop={8}>
-                                <MaterialIcons name="close" size={20} color="#3A020399" />
-                            </TouchableOpacity>
-                        </View>
-                    ))}
-                    <TouchableOpacity style={styles.addRowButton} onPress={() => handleInsertAfter()}>
-                        <MaterialIcons name="add" size={20} color="#3A020399" />
-                        <Text style={styles.addRowText}>Ajouter une tâche</Text>
-                    </TouchableOpacity>
-                </ScrollView>
-
-                <TouchableOpacity style={styles.doneButton} onPress={handleClose}>
-                    <Text style={styles.doneButtonText}>Done</Text>
+        <ModalDimmer visible={visible} onClose={handleClose} panelStyle={styles.panel}>
+            <ScrollView style={styles.scrollView}>
+                {[...data.tasks]
+                    .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+                    .map((task, index) => (
+                    <View key={task.id} style={getRowStyle(task, index)}>
+                        <Checkbox
+                            checked={task.status === "done"}
+                            onChange={() => onCheckboxChange(task)}
+                        />
+                        <TextInput
+                            ref={(input) => {
+                                inputRefs.current[task.id] = input;
+                            }}
+                            style={getTextInputStyle(task)}
+                            value={task.title}
+                            onChangeText={(text) => onTextInputChange(task, text)}
+                            onSubmitEditing={() => handleInsertAfter(task)}
+                            onFocus={() => setFocusedTaskId(task.id)}
+                            onBlur={() => setFocusedTaskId((id) => (id === task.id ? null : id))}
+                            returnKeyType="next"
+                            submitBehavior="submit"
+                        />
+                        <TouchableOpacity onPress={() => handleRemove(task)} hitSlop={8}>
+                            <MaterialIcons name="close" size={20} color="#3A020399" />
+                        </TouchableOpacity>
+                    </View>
+                ))}
+                <TouchableOpacity style={styles.addRowButton} onPress={() => handleInsertAfter()}>
+                    <MaterialIcons name="add" size={20} color="#3A020399" />
+                    <Text style={styles.addRowText}>Ajouter une tâche</Text>
                 </TouchableOpacity>
-            </View>
-        </Modal>
+            </ScrollView>
+
+            <TouchableOpacity style={styles.doneButton} onPress={handleClose}>
+                <Text style={styles.doneButtonText}>Done</Text>
+            </TouchableOpacity>
+        </ModalDimmer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
+    panel: {
         backgroundColor: '#b06994',
         paddingVertical: 25,
-        margin: 0,
-        marginTop: "auto",
-        marginBottom: "auto",
     },
     scrollView: {
-        paddingTop: 100,
+        paddingTop: 20,
     },
 
     row: {

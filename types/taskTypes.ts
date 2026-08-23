@@ -53,8 +53,3 @@ export interface EditTasks {
 export interface ListTasks {
     onViewTasks: (day: Date) => void;
 }
-
-export interface ListTasksItemProps {
-    task: Task;
-    onView: (task: Task) => void;
-}

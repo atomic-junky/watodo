@@ -40,7 +40,7 @@ export const useTasksStore = create<TaskAction & TasksState>((set, get) => ({
                 }));
                 return response.data;
             } else {
-                set({ loading: false, error: response.error || "Failed to add a newtask" });
+                set({ loading: false, error: response.error || "Failed to add a new task" });
                 return null;
             }
         } catch (error) {

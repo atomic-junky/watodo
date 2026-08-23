@@ -1,13 +1,40 @@
 import { BlurView } from 'expo-blur';
-import { Pressable, StyleSheet } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Pressable, StyleSheet } from 'react-native';
 
-const Dimmer = ({onPress} : DimmerProps) => {
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+
+const Dimmer = ({ visible, intensity = 25, onPress }: DimmerProps) => {
+    const [mounted, setMounted] = useState(visible);
+    const animatedIntensity = useRef(new Animated.Value(visible ? intensity : 0)).current;
+
+    useEffect(() => {
+        if (visible) {
+            setMounted(true);
+            Animated.timing(animatedIntensity, {
+                toValue: intensity,
+                duration: 200,
+                useNativeDriver: false,
+            }).start();
+        } else {
+            Animated.timing(animatedIntensity, {
+                toValue: 0,
+                duration: 150,
+                useNativeDriver: false,
+            }).start(({ finished }) => {
+                if (finished) setMounted(false);
+            });
+        }
+    }, [visible, intensity]);
+
+    if (!mounted) return null;
+
     return (
         <Pressable
             style={styles.dimmer}
             onPress={onPress}
         >
-            <BlurView intensity={25} style={styles.blurview} />
+            <AnimatedBlurView intensity={animatedIntensity} tint="regular" style={styles.blurview} />
         </Pressable>
     );
 }
@@ -32,5 +59,7 @@ export default Dimmer;
 
 
 interface DimmerProps {
+    visible: boolean;
+    intensity?: number;
     onPress: () => void;
 }

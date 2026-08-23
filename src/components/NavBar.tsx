@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
     },
     base: {
-        minHeight: 110,
+        minHeight: 90,
         backgroundColor: '#602244',
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,

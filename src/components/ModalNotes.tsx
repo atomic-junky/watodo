@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNotesStore } from '../../store/notesStore';
 import { ModalNotesProps } from '../../types/notesTypes';
+import ModalDimmer from './ModalDimmer';
 
 const ModalNotes = ({ visible, notes, day, onClose, onSuccess }: ModalNotesProps) => {
     const { addNotes, updateNotes, deleteNotes } = useNotesStore();
@@ -40,45 +41,33 @@ const ModalNotes = ({ visible, notes, day, onClose, onSuccess }: ModalNotesProps
     }
 
     return (
-        <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={handleClose}>
-            <View style={styles.container}>
-                <TextInput
-                    style={styles.textInput}
-                    value={text}
-                    onChangeText={setText}
-                    multiline
-                    placeholder="Écris une note..."
-                    placeholderTextColor="#3A020366"
-                    editable={!loading}
-                />
+        <ModalDimmer visible={visible} onClose={handleClose} panelStyle={styles.panel}>
+            <TextInput
+                style={styles.textInput}
+                value={text}
+                onChangeText={setText}
+                multiline
+                placeholder="Écris une note..."
+                placeholderTextColor="#3A020366"
+                editable={!loading}
+            />
 
-                <TouchableOpacity style={styles.doneButton} onPress={handleClose}>
-                    <Text style={styles.doneButtonText}>Done</Text>
-                </TouchableOpacity>
-            </View>
-        </Modal>
+            <TouchableOpacity style={styles.doneButton} onPress={handleClose}>
+                <Text style={styles.doneButtonText}>Done</Text>
+            </TouchableOpacity>
+        </ModalDimmer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
+    panel: {
         backgroundColor: '#f8aebe',
         paddingVertical: 25,
         paddingHorizontal: 35,
-        margin: 0,
-        marginTop: "auto",
-        marginBottom: "auto",
     },
     textInput: {
         flex: 1,
-        paddingTop: 75,
+        paddingTop: 20,
         fontFamily: "Fredoka-Medium",
         fontSize: 18,
         color: '#3A0203',

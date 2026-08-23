@@ -11,7 +11,7 @@ export function TicketCard({ children, cardColor, onPressed }: TicketCardProps) 
 
             <View style={styles.rowBackground}>
                 {
-                    [...Array(8).keys()].map((i) => (
+                    [...Array(7).keys()].map((i) => (
                         <View key={i} style={[styles.row, i % 2 === 1 && styles.rowOdd]} />
                     ))
                 }
@@ -25,9 +25,7 @@ export function TicketCard({ children, cardColor, onPressed }: TicketCardProps) 
 const styles = StyleSheet.create({
     cardContainer: {
         width: "100%",
-        height: "100%",
-        minHeight: 178,
-        maxHeight: 178,
+        height: 158,
         maxWidth: 200,
         borderRadius: 10,
         position: 'relative',
@@ -65,4 +63,5 @@ export interface TicketCardProps {
     cardColor?: string;
     date?: Date;
     onPressed?: () => void;
+    onLongPress?: () => void;
 }
